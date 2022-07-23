@@ -95,7 +95,7 @@ class ProfileScreen extends StatelessWidget {
                 } else if (streamSnapshot.hasData) {
                   return ListView.separated(
                     shrinkWrap: true,
-                    physics: const BouncingScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     separatorBuilder: (context, index) {
                       return const Divider(
                         thickness: 2,

@@ -10,6 +10,7 @@ class SolvedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -33,8 +34,6 @@ class SolvedScreen extends StatelessWidget {
             },
             itemCount: data.length,
             itemBuilder: (context, index) {
-              final width = MediaQuery.of(context).size.width;
-
               final user = solvedData[index];
               final List<String> imgList = [user.image, user.solvedImage];
               return Container(
