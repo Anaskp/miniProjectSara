@@ -313,10 +313,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
               'email': value.user!.email,
               'profileUrl': url,
             },
-          );
-
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => MainScreen()));
+          ).then((value) {
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                    builder: (context) => EmailVerificationScreen()),
+                (route) => false);
+          });
         });
       } on FirebaseAuthException catch (e) {
         GlobalSnackBar.show(context, e.message);

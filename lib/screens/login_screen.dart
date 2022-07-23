@@ -172,7 +172,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 email: _emailController.text, password: _passController.text)
             .then((value) {
           Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => MainScreen()),
+              MaterialPageRoute(
+                  builder: (context) => EmailVerificationScreen()),
               (route) => false);
         });
       } on FirebaseAuthException catch (e) {

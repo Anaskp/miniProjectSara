@@ -44,7 +44,7 @@ class MainAuthPage extends StatelessWidget {
               child: Text('Something got Error'),
             );
           } else if (snapshot.hasData) {
-            return MainScreen();
+            return EmailVerificationScreen();
           } else {
             return AuthScreen();
           }
