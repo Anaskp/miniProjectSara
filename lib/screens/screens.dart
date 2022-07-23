@@ -7,3 +7,4 @@ export 'profile_screen.dart';
 export 'solved_screen.dart';
 export 'add_post_screen.dart';
 export 'splash_screen.dart';
+export 'forget_screen.dart';

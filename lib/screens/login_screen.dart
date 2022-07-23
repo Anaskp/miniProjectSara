@@ -96,7 +96,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     alignment: Alignment.centerRight,
                     child: TextButton(
                       onPressed: () {
-                        print('forgot password');
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => ForgetScreen(),
+                          ),
+                        );
                       },
                       child: const Text('Forgot Password?'),
                     ),
@@ -152,29 +156,29 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> signIn() async {
     final isValid = _formKey.currentState!.validate();
 
-    if (!isValid) null;
+    if (isValid) {
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          });
 
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
+      try {
+        await FirebaseAuth.instance
+            .signInWithEmailAndPassword(
+                email: _emailController.text, password: _passController.text)
+            .then((value) {
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => MainScreen()),
+              (route) => false);
         });
-
-    try {
-      await FirebaseAuth.instance
-          .signInWithEmailAndPassword(
-              email: _emailController.text, password: _passController.text)
-          .then((value) {
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => MainScreen()),
-            (route) => false);
-      });
-    } on FirebaseAuthException catch (e) {
-      GlobalSnackBar.show(context, e.message);
-      Navigator.of(context).pop();
+      } on FirebaseAuthException catch (e) {
+        GlobalSnackBar.show(context, e.message);
+        Navigator.of(context).pop();
+      }
     }
   }
 }
