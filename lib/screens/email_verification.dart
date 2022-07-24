@@ -23,7 +23,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
     isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
     if (!isEmailVerified) {
       sendVerification(context);
-      timer = Timer.periodic(Duration(seconds: 5), (_) {
+      timer = Timer.periodic(const Duration(seconds: 5), (_) {
         checkEmailVerified();
       });
     }
@@ -50,7 +50,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
   @override
   Widget build(BuildContext context) {
     return isEmailVerified
-        ? MainScreen()
+        ? const MainScreen()
         : Scaffold(
             body: Padding(
               padding: const EdgeInsets.all(16),
@@ -59,9 +59,9 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text(
-                      'A verification email has sent to your email address',
+                      'A verification email has sent to your email address(Please check spam folder)',
                       style: TextStyle(
-                        fontSize: 23,
+                        fontSize: 18,
                       ),
                     ),
                     const SizedBox(
