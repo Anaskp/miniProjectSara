@@ -101,7 +101,8 @@ class ForgetScreen extends StatelessWidget {
             .sendPasswordResetEmail(email: _emailController.text)
             .then((value) => {
                   Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (context) => AuthScreen()),
+                      MaterialPageRoute(
+                          builder: (context) => const AuthScreen()),
                       (route) => false)
                 });
       } on FirebaseAuthException catch (e) {

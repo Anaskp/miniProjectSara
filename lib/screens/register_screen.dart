@@ -40,7 +40,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return isLoading
-        ? SpinWidget()
+        ? const SpinWidget()
         : Scaffold(
             body: SafeArea(
               child: Center(
@@ -116,7 +116,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   radius: 60,
                                   backgroundImage: image != null
                                       ? FileImage(image!)
-                                      : AssetImage('assets/avatar.png')
+                                      : const AssetImage('assets/avatar.png')
                                           as ImageProvider,
                                 ),
                                 Positioned(
@@ -320,8 +320,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
           isLoading = false;
         });
 
-        // Navigator.of(context).pushReplacement(
-        //     MaterialPageRoute(builder: (context) => EmailVerificationScreen()));
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
                 builder: (context) => const EmailVerificationScreen()),
@@ -332,21 +330,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         });
 
         GlobalSnackBar.show(context, e.message);
-        //Navigator.of(context).pop();
       }
     }
-  }
-
-  Future<dynamic> spin() {
-    return showDialog(
-        context: context,
-        useRootNavigator: false,
-        barrierDismissible: false,
-        builder: (context) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        });
   }
 
   Future pickImage(source) async {

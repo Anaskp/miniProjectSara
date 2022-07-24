@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.orange,
       ),
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+      home: const SplashScreen(),
     );
   }
 }
@@ -44,7 +44,7 @@ class MainAuthPage extends StatelessWidget {
               child: Text('Something got Error'),
             );
           } else if (snapshot.hasData) {
-            return EmailVerificationScreen();
+            return const EmailVerificationScreen();
           } else {
             return AuthScreen();
           }

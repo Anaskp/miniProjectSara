@@ -12,8 +12,8 @@ class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
   final _pages = [
-    HomeScreen(),
-    SolvedScreen(),
+    const HomeScreen(),
+    const SolvedScreen(),
     ProfileScreen(),
   ];
 
@@ -21,7 +21,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('SARA'),
+        title: const Text('SARA'),
         centerTitle: true,
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -53,7 +53,7 @@ class _MainScreenState extends State<MainScreen> {
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => AddPost(),
+              builder: (context) => const AddPost(),
             ),
           );
         },

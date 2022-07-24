@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -150,7 +150,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 Row(
                                   children: [
-                                    _postButton(
+                                    _PostButton(
                                       color: isLiked ? Colors.red : Colors.grey,
                                       icon: Icon(
                                         Icons.arrow_upward_sharp,
@@ -167,7 +167,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     const VerticalDivider(
                                       width: 3,
                                     ),
-                                    _postButton(
+                                    _PostButton(
                                         color: Colors.grey,
                                         icon: const Icon(Icons.report),
                                         text: 'Report',
@@ -225,15 +225,14 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-class _postButton extends StatelessWidget {
+class _PostButton extends StatelessWidget {
   final Icon icon;
   final String text;
   final VoidCallback ontap;
   final Color color;
 
-  const _postButton(
-      {super.key,
-      required this.icon,
+  const _PostButton(
+      {required this.icon,
       required this.text,
       required this.ontap,
       required this.color});

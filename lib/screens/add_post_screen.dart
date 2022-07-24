@@ -398,7 +398,7 @@ class _AddPostState extends State<AddPost> {
   }
 
   fetchData(context) async {
-    final user = await FirebaseAuth.instance.currentUser;
+    final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       await FirebaseFirestore.instance
           .collection('usersData')

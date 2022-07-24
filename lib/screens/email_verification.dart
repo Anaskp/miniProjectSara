@@ -105,7 +105,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                           FirebaseAuth.instance.signOut();
                           Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(
-                                  builder: (context) => AuthScreen()),
+                                  builder: (context) => const AuthScreen()),
                               (route) => false);
                         },
                         child: const Text('Cancel'),

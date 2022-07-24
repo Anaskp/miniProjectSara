@@ -3,7 +3,7 @@ import 'package:mini_project/screens/login_screen.dart';
 import 'package:mini_project/screens/register_screen.dart';
 
 class AuthScreen extends StatefulWidget {
-  AuthScreen({Key? key}) : super(key: key);
+  const AuthScreen({Key? key}) : super(key: key);
 
   @override
   State<AuthScreen> createState() => _AuthScreenState();

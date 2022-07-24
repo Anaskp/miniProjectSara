@@ -173,7 +173,7 @@ class _LoginScreenState extends State<LoginScreen> {
             .then((value) {
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
-                  builder: (context) => EmailVerificationScreen()),
+                  builder: (context) => const EmailVerificationScreen()),
               (route) => false);
         });
       } on FirebaseAuthException catch (e) {
