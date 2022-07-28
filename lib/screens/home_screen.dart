@@ -171,7 +171,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                         color: Colors.grey,
                                         icon: const Icon(Icons.report),
                                         text: 'Report',
-                                        ontap: () {}),
+                                        ontap: () {
+                                          reportPost(context, documentSnapshot);
+                                        }),
                                   ],
                                 ),
                               ],
@@ -198,6 +200,42 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Future<dynamic> reportPost(
+      BuildContext context, DocumentSnapshot<Object?> documentSnapshot) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            contentPadding: EdgeInsets.zero,
+            backgroundColor: const Color.fromARGB(255, 61, 61, 61),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ReportOption(
+                  documentSnapshot: documentSnapshot,
+                  text: 'Wrong Category',
+                ),
+                const Divider(thickness: 2),
+                ReportOption(
+                  documentSnapshot: documentSnapshot,
+                  text: 'Not a complaint',
+                ),
+                const Divider(thickness: 2),
+                ReportOption(
+                  documentSnapshot: documentSnapshot,
+                  text: 'Not a public complaint',
+                ),
+                const Divider(thickness: 2),
+                ReportOption(
+                  documentSnapshot: documentSnapshot,
+                  text: 'Explicit content',
+                ),
+              ],
+            ),
+          );
+        });
+  }
+
   void addLike(DocumentSnapshot documentSnapshot) async {
     await FirebaseFirestore.instance
         .collection('complaints')
@@ -222,6 +260,58 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       isFiltered = !isFiltered;
     });
+  }
+}
+
+class ReportOption extends StatelessWidget {
+  final String text;
+  final DocumentSnapshot documentSnapshot;
+
+  const ReportOption(
+      {super.key, required this.text, required this.documentSnapshot});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: TextButton(
+        onPressed: () async {
+          await FirebaseFirestore.instance
+              .collection('reportedComplaints')
+              .doc(documentSnapshot.id)
+              .set({
+            'email': documentSnapshot['email'],
+            'imgUID': documentSnapshot['imgUID'],
+            'imgURL': documentSnapshot['imgURL'],
+            'address': documentSnapshot['address'],
+            'details': documentSnapshot['details'],
+            'category': documentSnapshot['category'],
+            'lat': documentSnapshot['lat'],
+            'long': documentSnapshot['long'],
+            'status': documentSnapshot['status'],
+            'userUID': documentSnapshot['userUID'],
+            'userName': documentSnapshot['userName'],
+            'userProfile': documentSnapshot['userProfile'],
+            'vote': documentSnapshot['vote'],
+            'votedUser': documentSnapshot['votedUser'],
+            'reportedcategory': text,
+          });
+
+          await FirebaseFirestore.instance
+              .collection('complaints')
+              .doc(documentSnapshot.id)
+              .delete();
+
+          Navigator.of(context).pop();
+        },
+        child: Text(
+          text,
+          style: const TextStyle(
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
   }
 }
 

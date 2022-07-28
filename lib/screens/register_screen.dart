@@ -73,34 +73,40 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   context: context,
                                   builder: (context) {
                                     return AlertDialog(
-                                      backgroundColor: Colors.grey,
+                                      contentPadding: EdgeInsets.zero,
+                                      backgroundColor:
+                                          const Color.fromARGB(255, 61, 61, 61),
                                       content: Column(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          TextButton(
-                                            onPressed: () {
-                                              pickImage(ImageSource.camera);
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: const Text(
-                                              'Camera',
-                                              style: TextStyle(
-                                                color: Colors.white,
+                                          SizedBox(
+                                            width: double.infinity,
+                                            child: TextButton(
+                                              onPressed: () {
+                                                pickImage(ImageSource.camera);
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: const Text(
+                                                'Camera',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                ),
                                               ),
                                             ),
                                           ),
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          TextButton(
-                                            onPressed: () {
-                                              pickImage(ImageSource.gallery);
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: const Text(
-                                              'Gallery',
-                                              style: TextStyle(
-                                                color: Colors.white,
+                                          const Divider(thickness: 2),
+                                          SizedBox(
+                                            width: double.infinity,
+                                            child: TextButton(
+                                              onPressed: () {
+                                                pickImage(ImageSource.gallery);
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: const Text(
+                                                'Gallery',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                ),
                                               ),
                                             ),
                                           ),
