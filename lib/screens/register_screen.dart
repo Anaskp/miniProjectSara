@@ -293,8 +293,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
 
     if (isValid && image != null) {
-      //spin();
-
       setState(() {
         isLoading = true;
       });
@@ -318,6 +316,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           {
             'name': _nameController.text,
             'email': _emailController.text,
+            'role': 'user',
             'profileUrl': url,
           },
         );
@@ -342,8 +341,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Future pickImage(source) async {
     try {
-      final image =
-          await ImagePicker().pickImage(source: source, imageQuality: 50);
+      final image = await ImagePicker().pickImage(
+        source: source,
+        imageQuality: 50,
+      );
       if (image == null) return null;
 
       final imageTemporary = File(image.path);

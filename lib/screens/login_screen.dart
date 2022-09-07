@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+
 import 'package:mini_project/screens/screens.dart';
 import 'package:mini_project/widgets/snackbar.dart';
 
@@ -167,15 +169,13 @@ class _LoginScreenState extends State<LoginScreen> {
           });
 
       try {
-        await FirebaseAuth.instance
-            .signInWithEmailAndPassword(
-                email: _emailController.text, password: _passController.text)
-            .then((value) {
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(
-                  builder: (context) => const EmailVerificationScreen()),
-              (route) => false);
-        });
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+            email: _emailController.text, password: _passController.text);
+
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+                builder: (context) => const EmailVerificationScreen()),
+            (route) => false);
       } on FirebaseAuthException catch (e) {
         GlobalSnackBar.show(context, e.message);
         Navigator.of(context).pop();
