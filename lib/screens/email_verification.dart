@@ -20,14 +20,12 @@ class EmailVerificationScreen extends StatefulWidget {
 class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
   bool canResend = false;
   bool isEmailVerified = false;
-  bool isAdmin = false;
+
   Timer? timer;
   final user = FirebaseAuth.instance.currentUser;
 
   @override
   void initState() {
-    checkIsAdmin(user!.uid);
-
     isEmailVerified = user!.emailVerified;
     if (!isEmailVerified) {
       sendVerification(context);
@@ -37,23 +35,6 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
     }
 
     super.initState();
-  }
-
-  Future<bool> checkIsAdmin(String docID) async {
-    try {
-      await FirebaseFirestore.instance
-          .doc("adminData/$docID")
-          .get()
-          .then((doc) {
-        setState(() {
-          isAdmin = doc.exists;
-        });
-      });
-
-      return isAdmin;
-    } catch (e) {
-      return false;
-    }
   }
 
   Future checkEmailVerified() async {
@@ -74,75 +55,75 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return (isEmailVerified && isAdmin)
-        ? AdminMain()
-        : isEmailVerified
-            ? MainScreen()
-            : Scaffold(
-                body: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          'A verification email has sent to your email address(Please check spam folder)',
-                          style: TextStyle(
-                            fontSize: 18,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        SizedBox(
-                          height: 50,
-                          width: double.infinity,
-                          child: AbsorbPointer(
-                            absorbing: canResend ? false : true,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                              ),
-                              onPressed: () {},
-                              child: canResend
-                                  ? const Text(
-                                      'Send verification link',
-                                    )
-                                  : const CircularProgressIndicator(
-                                      color: Colors.white),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        SizedBox(
-                          height: 50,
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              primary: Colors.grey[300],
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                            ),
-                            onPressed: () {
-                              FirebaseAuth.instance.signOut();
-                              Navigator.of(context).pushAndRemoveUntil(
-                                  MaterialPageRoute(
-                                      builder: (context) => const AuthScreen()),
-                                  (route) => false);
-                            },
-                            child: const Text('Cancel'),
-                          ),
-                        ),
-                      ],
+    return isEmailVerified
+        ? RouteConfig()
+        : Scaffold(
+            body: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'A verification email has sent to your email address(Please check spam folder)',
+                      style: TextStyle(
+                        fontSize: 18,
+                      ),
                     ),
-                  ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    SizedBox(
+                      height: 50,
+                      width: double.infinity,
+                      child: AbsorbPointer(
+                        absorbing: canResend ? false : true,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                          ),
+                          onPressed: () {
+                            sendVerification(context);
+                          },
+                          child: canResend
+                              ? const Text(
+                                  'Send verification link',
+                                )
+                              : const CircularProgressIndicator(
+                                  color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    SizedBox(
+                      height: 50,
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.grey[300],
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                        ),
+                        onPressed: () {
+                          FirebaseAuth.instance.signOut();
+                          Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                  builder: (context) => const AuthScreen()),
+                              (route) => false);
+                        },
+                        child: const Text('Cancel'),
+                      ),
+                    ),
+                  ],
                 ),
-              );
+              ),
+            ),
+          );
   }
 
   Future sendVerification(context) async {
@@ -163,22 +144,52 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
 }
 
 class RouteConfig extends StatefulWidget {
-  bool isAdmin;
-  RouteConfig({Key? key, required this.isAdmin}) : super(key: key);
-
   @override
   State<RouteConfig> createState() => _RouteConfigState();
 }
 
 class _RouteConfigState extends State<RouteConfig> {
+  String? role;
+
+  final user = FirebaseAuth.instance.currentUser;
+
+  Future checkRole(String docID) async {
+    final DocumentSnapshot data =
+        await FirebaseFirestore.instance.doc("usersData/$docID").get();
+    role = data['role'];
+    print(role);
+
+    if (role == 'user') {
+      // ignore: use_build_context_synchronously
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const MainScreen()),
+          (route) => false);
+    } else {
+      // ignore: use_build_context_synchronously
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const AdminMain()),
+          (route) => false);
+    }
+  }
+
   @override
   void initState() {
-    print(widget.isAdmin);
+    checkRole(user!.uid);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return widget.isAdmin ? AdminMain() : const MainScreen();
+    return Scaffold(
+      body: Center(
+        child:
+            // ElevatedButton(
+            //     onPressed: () {
+            //       FirebaseAuth.instance.signOut();
+            //     },
+            //     child: Text('.')),
+            CircularProgressIndicator(),
+      ),
+    );
   }
 }

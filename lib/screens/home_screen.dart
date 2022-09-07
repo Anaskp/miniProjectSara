@@ -25,6 +25,11 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isFiltered = false;
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
