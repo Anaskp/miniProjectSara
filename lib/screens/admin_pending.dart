@@ -1,25 +1,46 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mini_project/screens/complaint_solved_pic.dart';
 
-class SolvedScreen extends StatefulWidget {
-  const SolvedScreen({
+class AdminPending extends StatefulWidget {
+  const AdminPending({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<SolvedScreen> createState() => _SolvedScreenState();
+  State<AdminPending> createState() => _AdminPendingState();
 }
 
-class _SolvedScreenState extends State<SolvedScreen> {
+class _AdminPendingState extends State<AdminPending> {
   String? category;
   bool isFiltered = false;
+  dynamic _complaints;
+  final _statusList = ['Work started', 'Work Completed'];
+  String? _choosenStatus;
 
-  final _complaints = FirebaseFirestore.instance
-      .collection('complaints')
-      .where('track', isEqualTo: 'solved')
-      .snapshots();
+  Future fetchData() async {
+    var data = await FirebaseFirestore.instance
+        .collection('usersData')
+        .doc(user!.uid)
+        .get();
+
+    setState(() {
+      category = data['category'];
+
+      _complaints = FirebaseFirestore.instance
+          .collection('complaints')
+          .where('category', isEqualTo: category)
+          .where('track', isEqualTo: 'pending')
+          .snapshots();
+    });
+  }
+
+  @override
+  void initState() {
+    fetchData();
+    super.initState();
+  }
 
   final user = FirebaseAuth.instance.currentUser;
 
@@ -56,11 +77,6 @@ class _SolvedScreenState extends State<SolvedScreen> {
                   itemBuilder: (context, index) {
                     final DocumentSnapshot documentSnapshot =
                         streamSnapshot.data!.docs[index];
-
-                    final List<String> imgList = [
-                      documentSnapshot['imgURL'],
-                      documentSnapshot['imgSolved']
-                    ];
 
                     return Container(
                       padding: const EdgeInsets.only(
@@ -129,45 +145,40 @@ class _SolvedScreenState extends State<SolvedScreen> {
                               const SizedBox(
                                 height: 10,
                               ),
-                              CarouselSlider(
-                                options: CarouselOptions(
-                                    viewportFraction: 1,
-                                    aspectRatio: 1.1,
-                                    enableInfiniteScroll: false,
-                                    scrollPhysics:
-                                        const BouncingScrollPhysics()),
-                                items: imgList
-                                    .map(
-                                      (item) => Stack(
-                                        children: [
-                                          Image.network(
-                                            item,
-                                            fit: BoxFit.contain,
-                                          ),
-                                          Positioned(
-                                            top: 10,
-                                            right: 10,
-                                            child: DecoratedBox(
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                                color: Colors.grey[300],
-                                              ),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(5),
-                                                child: Text(
-                                                    '${imgList.indexOf(item) + 1} / 2'),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                    .toList(),
+                              Image.network(
+                                documentSnapshot['imgURL'],
                               ),
                               const SizedBox(
                                 height: 10,
+                              ),
+                              DropdownButtonHideUnderline(
+                                child: ButtonTheme(
+                                  alignedDropdown: true,
+                                  child: DropdownButton(
+                                    iconSize: 35,
+                                    isExpanded: true,
+                                    borderRadius: BorderRadius.circular(15),
+                                    value: _choosenStatus,
+                                    items: _statusList.map(
+                                      (String value) {
+                                        return DropdownMenuItem(
+                                          value: value,
+                                          child: Text(value),
+                                        );
+                                      },
+                                    ).toList(),
+                                    hint: const Text('Choose complaint status'),
+                                    onChanged: (value) {
+                                      setState(
+                                        () {
+                                          statusChangePopUp(
+                                              value, documentSnapshot);
+                                          _choosenStatus = value as String?;
+                                        },
+                                      );
+                                    },
+                                  ),
+                                ),
                               ),
                             ],
                           )
@@ -189,6 +200,67 @@ class _SolvedScreenState extends State<SolvedScreen> {
           },
         ),
       ),
+    );
+  }
+
+  statusChangePopUp(status, documentSnapshot) async {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          contentPadding: const EdgeInsets.all(10),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('Update complaint status ?'),
+              const SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.grey[200],
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('Cancel'),
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        primary: Colors.green, onPrimary: Colors.white),
+                    onPressed: () async {
+                      if (status == 'Work started') {
+                        await FirebaseFirestore.instance
+                            .collection('complaints')
+                            .doc(documentSnapshot.id)
+                            .update({
+                          'status': status,
+                        });
+
+                        Navigator.of(context).pop();
+                      } else {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                ComplaintSolvedPic(docUID: documentSnapshot.id),
+                          ),
+                        );
+                      }
+                    },
+                    child: const Text('Update'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

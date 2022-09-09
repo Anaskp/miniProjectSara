@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+
 import 'package:flutter/material.dart';
 import 'package:mini_project/screens/admin_main.dart';
 import 'package:mini_project/screens/auth_screen.dart';
@@ -56,7 +56,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
   @override
   Widget build(BuildContext context) {
     return isEmailVerified
-        ? RouteConfig()
+        ? const RouteConfig()
         : Scaffold(
             body: Padding(
               padding: const EdgeInsets.all(16),
@@ -144,6 +144,8 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
 }
 
 class RouteConfig extends StatefulWidget {
+  const RouteConfig({Key? key}) : super(key: key);
+
   @override
   State<RouteConfig> createState() => _RouteConfigState();
 }
@@ -157,15 +159,12 @@ class _RouteConfigState extends State<RouteConfig> {
     final DocumentSnapshot data =
         await FirebaseFirestore.instance.doc("usersData/$docID").get();
     role = data['role'];
-    print(role);
 
     if (role == 'user') {
-      // ignore: use_build_context_synchronously
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => const MainScreen()),
           (route) => false);
     } else {
-      // ignore: use_build_context_synchronously
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => const AdminMain()),
           (route) => false);
@@ -180,15 +179,9 @@ class _RouteConfigState extends State<RouteConfig> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Center(
-        child:
-            // ElevatedButton(
-            //     onPressed: () {
-            //       FirebaseAuth.instance.signOut();
-            //     },
-            //     child: Text('.')),
-            CircularProgressIndicator(),
+        child: CircularProgressIndicator(),
       ),
     );
   }

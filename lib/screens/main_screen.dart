@@ -36,7 +36,7 @@ class _MainScreenState extends State<MainScreen> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.check),
+            icon: Icon(Icons.task_alt),
             label: 'Solved',
           ),
           BottomNavigationBarItem(

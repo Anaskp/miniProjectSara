@@ -251,9 +251,14 @@ class ProfileScreen extends StatelessWidget {
                         primary: Colors.red[500], onPrimary: Colors.white),
                     onPressed: () async {
                       final imgURL = documentSnapshot['imgURL'];
+                      final imgSolved = documentSnapshot['imgSolved'];
 
                       await FirebaseStorage.instance
                           .refFromURL(imgURL)
+                          .delete();
+
+                      await FirebaseStorage.instance
+                          .refFromURL(imgSolved)
                           .delete();
 
                       await FirebaseFirestore.instance

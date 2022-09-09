@@ -51,7 +51,7 @@ class MainAuthPage extends StatelessWidget {
           } else if (snapshot.hasData) {
             return const EmailVerificationScreen();
           } else {
-            return AuthScreen();
+            return const AuthScreen();
           }
         },
       ),

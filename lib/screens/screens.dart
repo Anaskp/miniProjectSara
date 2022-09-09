@@ -9,3 +9,7 @@ export 'add_post_screen.dart';
 export 'splash_screen.dart';
 export 'forget_screen.dart';
 export 'email_verification.dart';
+export 'admin_main.dart';
+export 'admin_home.dart';
+export 'admin_pending.dart';
+export 'admin_solved.dart';

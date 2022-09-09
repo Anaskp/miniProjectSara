@@ -12,22 +12,21 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final _complaintsNew = FirebaseFirestore.instance
       .collection('complaints')
+      .where('status', isNotEqualTo: 'Work Completed')
+      .orderBy('status')
       .orderBy("imgUID", descending: true)
       .snapshots();
 
   final _complaintsMoreVote = FirebaseFirestore.instance
       .collection('complaints')
+      .where('status', isNotEqualTo: 'Work Completed')
+      .orderBy('status')
       .orderBy("vote", descending: true)
       .snapshots();
 
   final _user = FirebaseAuth.instance.currentUser;
 
   bool isFiltered = false;
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {

@@ -3,23 +3,42 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class SolvedScreen extends StatefulWidget {
-  const SolvedScreen({
+class AdminSolved extends StatefulWidget {
+  const AdminSolved({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<SolvedScreen> createState() => _SolvedScreenState();
+  State<AdminSolved> createState() => _AdminSolvedState();
 }
 
-class _SolvedScreenState extends State<SolvedScreen> {
+class _AdminSolvedState extends State<AdminSolved> {
   String? category;
   bool isFiltered = false;
+  dynamic _complaints;
 
-  final _complaints = FirebaseFirestore.instance
-      .collection('complaints')
-      .where('track', isEqualTo: 'solved')
-      .snapshots();
+  Future fetchData() async {
+    var data = await FirebaseFirestore.instance
+        .collection('usersData')
+        .doc(user!.uid)
+        .get();
+
+    setState(() {
+      category = data['category'];
+
+      _complaints = FirebaseFirestore.instance
+          .collection('complaints')
+          .where('category', isEqualTo: category)
+          .where('track', isEqualTo: 'solved')
+          .snapshots();
+    });
+  }
+
+  @override
+  void initState() {
+    fetchData();
+    super.initState();
+  }
 
   final user = FirebaseAuth.instance.currentUser;
 

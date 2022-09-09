@@ -179,22 +179,27 @@ class _AddPostState extends State<AddPost> {
                       child: ButtonTheme(
                         alignedDropdown: true,
                         child: DropdownButton(
-                            iconSize: 35,
-                            isExpanded: true,
-                            borderRadius: BorderRadius.circular(15),
-                            value: _choosenCategory,
-                            items: _categoryLiist.map((String value) {
+                          iconSize: 35,
+                          isExpanded: true,
+                          borderRadius: BorderRadius.circular(15),
+                          value: _choosenCategory,
+                          items: _categoryLiist.map(
+                            (String value) {
                               return DropdownMenuItem(
                                 value: value,
                                 child: Text(value),
                               );
-                            }).toList(),
-                            hint: const Text('Choose category'),
-                            onChanged: (value) {
-                              setState(() {
+                            },
+                          ).toList(),
+                          hint: const Text('Choose category'),
+                          onChanged: (value) {
+                            setState(
+                              () {
                                 _choosenCategory = value as String?;
-                              });
-                            }),
+                              },
+                            );
+                          },
+                        ),
                       ),
                     ),
                   ),
