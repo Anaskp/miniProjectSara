@@ -302,6 +302,7 @@ class _AddPostState extends State<AddPost> {
 
         await FirebaseFirestore.instance.collection('complaints').doc(id).set({
           'homeFilter': 'Not Solved',
+          'track': '',
           'email': user.email,
           'imgUID': id,
           'imgURL': url,

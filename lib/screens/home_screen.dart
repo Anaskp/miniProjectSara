@@ -306,6 +306,8 @@ class ReportOption extends StatelessWidget {
             'vote': documentSnapshot['vote'],
             'votedUser': documentSnapshot['votedUser'],
             'reportedcategory': text,
+            'homeFilter': documentSnapshot['homeFilter'],
+            'track': documentSnapshot['track'],
           });
 
           await FirebaseFirestore.instance
