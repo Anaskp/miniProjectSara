@@ -301,6 +301,7 @@ class _AddPostState extends State<AddPost> {
         String url = await (await uploadTask).ref.getDownloadURL();
 
         await FirebaseFirestore.instance.collection('complaints').doc(id).set({
+          'homeFilter': 'Not Solved',
           'email': user.email,
           'imgUID': id,
           'imgURL': url,

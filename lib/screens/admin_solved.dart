@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mini_project/widgets/map_launcher.dart';
 
 class AdminSolved extends StatefulWidget {
   const AdminSolved({
@@ -61,7 +62,7 @@ class _AdminSolvedState extends State<AdminSolved> {
               if (streamSnapshot.hasError) {
                 return const Text('Something got error');
               } else if (streamSnapshot.data!.docs.isEmpty) {
-                return const Text('No Pending works');
+                return const Text('No Solved Works');
               } else if (streamSnapshot.hasData) {
                 return ListView.separated(
                   physics: const NeverScrollableScrollPhysics(),
@@ -118,19 +119,25 @@ class _AdminSolvedState extends State<AdminSolved> {
                               const SizedBox(
                                 height: 10,
                               ),
-                              Row(
-                                children: [
-                                  const Icon(Icons.location_on),
-                                  Expanded(
-                                    child: Text(
-                                      documentSnapshot['address'],
-                                      overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
-                                        fontSize: 16,
+                              InkWell(
+                                onTap: () {
+                                  MapLauncher().showMap(documentSnapshot['lat'],
+                                      documentSnapshot['long']);
+                                },
+                                child: Row(
+                                  children: [
+                                    const Icon(Icons.location_on),
+                                    Expanded(
+                                      child: Text(
+                                        documentSnapshot['address'],
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                               const SizedBox(
                                 height: 10,

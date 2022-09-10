@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -5,9 +6,18 @@ import 'package:flutter/material.dart';
 import 'package:mini_project/screens/auth_screen.dart';
 import 'package:mini_project/widgets/snackbar.dart';
 
-class ProfileScreen extends StatelessWidget {
-  ProfileScreen({Key? key}) : super(key: key);
+import '../widgets/map_launcher.dart';
+
+class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({Key? key}) : super(key: key);
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
   String? userName;
+
   String? profileUrl;
 
   final _myComplaints = FirebaseFirestore.instance
@@ -107,6 +117,15 @@ class ProfileScreen extends StatelessWidget {
                       final DocumentSnapshot documentSnapshot =
                           streamSnapshot.data!.docs[index];
 
+                      List? imgList;
+
+                      if (documentSnapshot['status'] == 'Work Completed') {
+                        imgList = [
+                          documentSnapshot['imgURL'],
+                          documentSnapshot['imgSolved']
+                        ];
+                      }
+
                       return Container(
                         padding: const EdgeInsets.only(
                           top: 10,
@@ -157,19 +176,26 @@ class ProfileScreen extends StatelessWidget {
                                 const SizedBox(
                                   height: 10,
                                 ),
-                                Row(
-                                  children: [
-                                    const Icon(Icons.location_on),
-                                    Expanded(
-                                      child: Text(
-                                        documentSnapshot['address'],
-                                        overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(
-                                          fontSize: 16,
+                                InkWell(
+                                  onTap: () {
+                                    MapLauncher().showMap(
+                                        documentSnapshot['lat'],
+                                        documentSnapshot['long']);
+                                  },
+                                  child: Row(
+                                    children: [
+                                      const Icon(Icons.location_on),
+                                      Expanded(
+                                        child: Text(
+                                          documentSnapshot['address'],
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                                 const SizedBox(
                                   height: 10,
@@ -187,9 +213,49 @@ class ProfileScreen extends StatelessWidget {
                                 const SizedBox(
                                   height: 10,
                                 ),
-                                Image.network(
-                                  documentSnapshot['imgURL'],
-                                ),
+                                documentSnapshot['status'] == 'Work Completed'
+                                    ? CarouselSlider(
+                                        options: CarouselOptions(
+                                            viewportFraction: 1,
+                                            aspectRatio: 1.1,
+                                            enableInfiniteScroll: false,
+                                            scrollPhysics:
+                                                const BouncingScrollPhysics()),
+                                        items: imgList
+                                            ?.map(
+                                              (item) => Stack(
+                                                children: [
+                                                  Image.network(
+                                                    item,
+                                                    fit: BoxFit.contain,
+                                                  ),
+                                                  Positioned(
+                                                    top: 10,
+                                                    right: 10,
+                                                    child: DecoratedBox(
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20),
+                                                        color: Colors.grey[300],
+                                                      ),
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(5),
+                                                        child: Text(
+                                                            ' ${imgList!.indexOf(item) + 1} / 2'),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                            .toList(),
+                                      )
+                                    : Image.network(
+                                        documentSnapshot['imgURL'],
+                                      ),
                                 const SizedBox(
                                   height: 10,
                                 ),

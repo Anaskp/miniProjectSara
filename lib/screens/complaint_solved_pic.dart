@@ -182,6 +182,7 @@ class _ComplaintSolvedPicState extends State<ComplaintSolvedPic> {
           'imgSolved': url,
           'status': 'Work Completed',
           'track': 'solved',
+          'homeFilter': 'Solved',
         });
         postValid = true;
         Navigator.of(context).pushAndRemoveUntil(

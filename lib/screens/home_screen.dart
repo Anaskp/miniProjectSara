@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../widgets/map_launcher.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -12,15 +14,13 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final _complaintsNew = FirebaseFirestore.instance
       .collection('complaints')
-      .where('status', isNotEqualTo: 'Work Completed')
-      .orderBy('status')
+      .where('homeFilter', isEqualTo: 'Not Solved')
       .orderBy("imgUID", descending: true)
       .snapshots();
 
   final _complaintsMoreVote = FirebaseFirestore.instance
       .collection('complaints')
-      .where('status', isNotEqualTo: 'Work Completed')
-      .orderBy('status')
+      .where('homeFilter', isEqualTo: 'Not Solved')
       .orderBy("vote", descending: true)
       .snapshots();
 
@@ -116,19 +116,26 @@ class _HomeScreenState extends State<HomeScreen> {
                                 const SizedBox(
                                   height: 10,
                                 ),
-                                Row(
-                                  children: [
-                                    const Icon(Icons.location_on),
-                                    Expanded(
-                                      child: Text(
-                                        documentSnapshot['address'],
-                                        overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(
-                                          fontSize: 16,
+                                InkWell(
+                                  onTap: () {
+                                    MapLauncher().showMap(
+                                        documentSnapshot['lat'],
+                                        documentSnapshot['long']);
+                                  },
+                                  child: Row(
+                                    children: [
+                                      const Icon(Icons.location_on),
+                                      Expanded(
+                                        child: Text(
+                                          documentSnapshot['address'],
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                                 const SizedBox(
                                   height: 10,

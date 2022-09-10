@@ -14,7 +14,7 @@ class _MainScreenState extends State<MainScreen> {
   final _pages = [
     const HomeScreen(),
     const SolvedScreen(),
-    ProfileScreen(),
+    const ProfileScreen(),
   ];
 
   @override

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_project/screens/complaint_solved_pic.dart';
+import 'package:mini_project/widgets/map_launcher.dart';
 
 class AdminPending extends StatefulWidget {
   const AdminPending({
@@ -110,24 +111,31 @@ class _AdminPendingState extends State<AdminPending> {
                                       ),
                                     ),
                                   ),
+                                  Text(documentSnapshot['status'])
                                 ],
                               ),
                               const SizedBox(
                                 height: 10,
                               ),
-                              Row(
-                                children: [
-                                  const Icon(Icons.location_on),
-                                  Expanded(
-                                    child: Text(
-                                      documentSnapshot['address'],
-                                      overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
-                                        fontSize: 16,
+                              InkWell(
+                                onTap: () {
+                                  MapLauncher().showMap(documentSnapshot['lat'],
+                                      documentSnapshot['long']);
+                                },
+                                child: Row(
+                                  children: [
+                                    const Icon(Icons.location_on),
+                                    Expanded(
+                                      child: Text(
+                                        documentSnapshot['address'],
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                               const SizedBox(
                                 height: 10,
@@ -167,7 +175,7 @@ class _AdminPendingState extends State<AdminPending> {
                                         );
                                       },
                                     ).toList(),
-                                    hint: const Text('Choose complaint status'),
+                                    hint: Text(documentSnapshot['status']),
                                     onChanged: (value) {
                                       setState(
                                         () {
