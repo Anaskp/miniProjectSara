@@ -317,14 +317,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         primary: Colors.red[500], onPrimary: Colors.white),
                     onPressed: () async {
                       final imgURL = documentSnapshot['imgURL'];
-                      final imgSolved = documentSnapshot['imgSolved'];
+
+                      if (documentSnapshot['status'] == 'Work Completed') {
+                        final imgSolved = documentSnapshot['imgSolved'];
+
+                        await FirebaseStorage.instance
+                            .refFromURL(imgSolved)
+                            .delete();
+                      }
 
                       await FirebaseStorage.instance
                           .refFromURL(imgURL)
-                          .delete();
-
-                      await FirebaseStorage.instance
-                          .refFromURL(imgSolved)
                           .delete();
 
                       await FirebaseFirestore.instance
